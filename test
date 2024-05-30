@@ -1,0 +1,33 @@
+#include <windows.h>
+#include <stdio.h>
+#include "skCrypter.h"
+
+#define NtGetCurrentProcess() (HANDLE)-1
+#define NtGetCurrentThread() (HANDLE)-2
+#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
+#define InitializeObjectAttributes(p, n, a, r, s) { \
+    (p)->Length = sizeof(OBJECT_ATTRIBUTES); \
+    (p)->RootDirectory = r; \
+    (p)->Attributes = a; \
+    (p)->ObjectName = n; \
+    (p)->SecurityDescriptor = s; \
+    (p)->SecurityQualityOfService = NULL; \
+    }
+
+
+typedef struct _UNICODE_STRING
+{
+	USHORT Length;
+	USHORT MaximumLength;
+	_Field_size_bytes_part_opt_(MaximumLength, Length) PWCH Buffer;
+} UNICODE_STRING, * PUNICODE_STRING;
+
+typedef struct _OBJECT_ATTRIBUTES
+{
+	ULONG Length;
+	PVOID RootDirectory;
+	PUNICODE_STRING ObjectName;
+	ULONG Attributes;
+	PVOID SecurityDescriptor;
+	PVOID SecurityQualityOfService;
+} OBJECT_ATTRIBUTES, * POBJECT_ATTRIBUTES
